@@ -1,47 +1,421 @@
 {% extends "layout.html" %}
+
 {% block content %}
-	<div class="content-section">
-		<form method="POST" action="">
-			{{ form.hidden_tag() }}
-			<fieldset class="form-grp">
-				<legend class="border-botton mb-4">Book Recommender</legend>
+<!-- Hero Section for Recommender -->
+<section class="recommender-hero py-5">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <div class="content-section">
+                    <div class="recommender-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h1 class="text-gradient">Book Discovery Engine</h1>
+                    <p class="text-muted mb-4">
+                        Enter a book you love and let our AI find your next perfect read from our vast collection.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-				<div class="form-grp">
-					{{ form.bookname.label(class="form-control-label")}}
+<!-- Search Form -->
+<section class="search-section py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="content-section">
+                    <form method="POST" action="" class="search-form">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-grp">
+                            <div class="search-input-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                                    </div>
+                                    {{ form.bookname(class="form-control form-control-lg", placeholder="Enter a book title you love...") }}
+                                    <div class="input-group-append">
+                                        {{ form.submit(class="btn btn-outline-info btn-lg") }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% if form.bookname.errors %}
+                                <div class="error-message">
+                                    {% for error in form.bookname.errors %}
+                                        <small class="text-danger">
+                                            <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                        </small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                    
+                    <!-- Popular Searches -->
+                    <div class="popular-searches mt-4">
+                        <h6 class="text-muted mb-3">Popular searches:</h6>
+                        <div class="search-tags">
+                            <span class="search-tag">Harry Potter</span>
+                            <span class="search-tag">The Great Gatsby</span>
+                            <span class="search-tag">1984</span>
+                            <span class="search-tag">Pride and Prejudice</span>
+                            <span class="search-tag">To Kill a Mockingbird</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-					{% if form.bookname.errors %}
-						{{ form.bookname(class="form-control form-control-lg is-invalid")}}
-						<div class="invalid-feedback">
-							{% for error in form.bookname.errors %}
-								<span>
-									{{ error }}
-								</span>
-							{% endfor %}
-						</div>
-						{% else %}
-							{{ form.bookname(class="form-control form-control-lg")}}
-					{% endif %}
-				</div>
+<!-- Results Section -->
+{% if final %}
+<section class="results-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="results-header text-center mb-5">
+                    <h2 class="text-gradient">
+                        <i class="fas fa-star me-2"></i>Your Personalized Recommendations
+                    </h2>
+                    <p class="text-muted">Based on your preferences, here are books you might love</p>
+                </div>
+                
+                <div class="recommendations-grid">
+                    {% for title, image, year, author in final %}
+                    <div class="recommendation-card content-section hover-lift">
+                        <div class="card-header">
+                            <div class="recommendation-number">
+                                <span>{{ loop.index }}</span>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-sm btn-outline-info" title="Add to favorites">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-info" title="Add to reading list">
+                                    <i class="fas fa-bookmark"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-info" title="Share">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="book-cover-container">
+                            <img src="{{ image }}" alt="{{ title }}" class="book-cover-image">
+                            <div class="book-overlay">
+                                <div class="overlay-content">
+                                    <button class="btn btn-outline-info">
+                                        <i class="fas fa-eye me-2"></i>View Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="book-info">
+                            <h5 class="book-title">{{ title }}</h5>
+                            <p class="book-author">
+                                <i class="fas fa-user me-1"></i>{{ author }}
+                            </p>
+                            <p class="book-year">
+                                <i class="fas fa-calendar me-1"></i>{{ year }}
+                            </p>
+                            
+                            <div class="book-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="rating-text">4.5/5</span>
+                            </div>
+                            
+                            <div class="book-tags">
+                                <span class="tag">Fiction</span>
+                                <span class="tag">Classic</span>
+                                <span class="tag">Literature</span>
+                            </div>
+                            
+                            <div class="book-actions mt-3">
+                                <button class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-book-open me-1"></i>Read More
+                                </button>
+                                <button class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-shopping-cart me-1"></i>Buy Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Load More Button -->
+                <div class="text-center mt-5">
+                    <button class="btn btn-outline-info btn-lg">
+                        <i class="fas fa-plus me-2"></i>Load More Recommendations
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
 
-			</fieldset>
-			<br/>
-			<div class="form-grp">
-				{{ form.submit(class="btn btn-outline-info")}}
-			</div>
-		</form>
-	</div>
-	<hr />
-<!-- 	<h1> TOP RECOMMENDATIONS </h1> -->
-	{% for w,x,y,z in final %}
-		<article class="media content-section">
-		  <div class="media-body">
-		    <div class="article-metadata">
-		    	<img class="book-cover-image" src="{{ x }}" align="left" alt=""> 
-		    	<strong>{{ w }}</strong>
-		    </div>
-		    <a class="article-content"> <i>Publication year :</i> {{ y }}</a>
-		    <p class="article-content"> <i>Author :</i> {{ z }}</p>
-		  </div>
-		</article>
-	{% endfor %}
-{% endblock content %}
+<!-- Features Section -->
+<section class="features-section py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="text-gradient">How Our Recommendation Engine Works</h2>
+                <p class="text-muted">Advanced AI technology for personalized book discovery</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card content-section text-center hover-lift">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h5>Machine Learning</h5>
+                    <p class="text-muted">Our AI analyzes your preferences and reading patterns to suggest perfect matches.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card content-section text-center hover-lift">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5>Community Insights</h5>
+                    <p class="text-muted">Leveraging data from thousands of readers with similar tastes.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card content-section text-center hover-lift">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h5>Continuous Learning</h5>
+                    <p class="text-muted">The more you use our system, the better your recommendations become.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.recommender-icon {
+    font-size: 4rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+}
+
+.search-input-group .input-group-text {
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    border-right: none;
+    color: var(--text-secondary);
+    backdrop-filter: blur(10px);
+}
+
+.search-input-group .form-control {
+    border-left: none;
+    border-radius: 0;
+    font-size: 1.1rem;
+}
+
+.search-input-group .btn {
+    border-radius: 0 15px 15px 0;
+    padding: 0.75rem 1.5rem;
+}
+
+.popular-searches {
+    text-align: center;
+}
+
+.search-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.search-tag {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.search-tag:hover {
+    background: var(--accent-gradient);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.recommendation-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.recommendation-number {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.card-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.book-cover-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+}
+
+.book-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.recommendation-card:hover .book-overlay {
+    opacity: 1;
+}
+
+.book-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.book-author, .book-year {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.book-rating {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+}
+
+.stars {
+    color: #ffc107;
+}
+
+.rating-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.book-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin: 0.5rem 0;
+}
+
+.tag {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.book-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .recommendations-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-tags {
+        justify-content: flex-start;
+    }
+}
+</style>
+
+<script>
+// Add click functionality to search tags
+document.querySelectorAll('.search-tag').forEach(tag => {
+    tag.addEventListener('click', function() {
+        const bookInput = document.querySelector('input[name="bookname"]');
+        bookInput.value = this.textContent;
+        bookInput.focus();
+    });
+});
+
+// Add smooth scrolling to results
+document.querySelector('form').addEventListener('submit', function() {
+    setTimeout(() => {
+        const resultsSection = document.querySelector('.results-section');
+        if (resultsSection) {
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, 1000);
+});
+</script>
+{% endblock %}
