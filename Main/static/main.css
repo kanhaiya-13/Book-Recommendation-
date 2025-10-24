@@ -7,13 +7,14 @@
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --accent-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.3);
   --text-primary: #2c3e50;
-  --text-secondary: #7f8c8d;
-  --text-light: #ecf0f1;
+  --text-secondary: #34495e;
+  --text-light: #ffffff;
+  --text-dark: #2c3e50;
   --shadow-light: 0 8px 32px rgba(31, 38, 135, 0.37);
   --shadow-hover: 0 15px 35px rgba(31, 38, 135, 0.5);
   --border-radius: 20px;
@@ -95,6 +96,8 @@ h1, h2, h3, h4, h5, h6 {
   background-clip: text;
   text-decoration: none;
   transition: var(--transition);
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.3);
+  filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.2));
 }
 
 .navbar-brand:hover {
@@ -160,6 +163,11 @@ main {
   transition: var(--transition);
   position: relative;
   overflow: hidden;
+}
+
+.content-section p {
+  color: var(--text-dark);
+  font-weight: 500;
 }
 
 .content-section::before {
@@ -268,6 +276,7 @@ main {
   margin-bottom: 3rem;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .hero-section::before {
@@ -296,13 +305,17 @@ main {
   background-clip: text;
   margin-bottom: 1rem;
   animation: fadeInUp 1s ease-out;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.2));
 }
 
 .hero-subtitle {
   font-size: 1.2rem;
-  color: var(--text-secondary);
+  color: var(--text-dark);
+  font-weight: 500;
   margin-bottom: 2rem;
   animation: fadeInUp 1s ease-out 0.2s both;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Book Cards */
@@ -503,6 +516,8 @@ main {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.3);
+  filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.2));
 }
 
 .glass-effect {
