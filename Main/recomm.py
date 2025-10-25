@@ -5,10 +5,16 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 def recom(books_user_likes):
 	def get_title_from_index(index):
-		return df[df.index == index]["Title"].values[0]
+		result = df[df.index == index]["Title"].values
+		if len(result) == 0:
+			raise ValueError(f"Index {index} not found in the dataset")
+		return result[0]
 
 	def get_index_from_title(Title):
-		return df[df.Title == Title]["index"].values[0]
+		result = df[df.Title == Title]["index"].values
+		if len(result) == 0:
+			raise ValueError(f"Book '{Title}' not found in the dataset")
+		return result[0]
 
 	books = pd.read_csv(r"D:\Book_Recommender_System\Bookz.csv")
 	books=books[:1000]
@@ -36,8 +42,12 @@ def recom(books_user_likes):
 	cosine_sim = cosine_similarity(count_matrix) 
 
 #Get index of this book from its title
-	books_index = get_index_from_title(books_user_likes)
-	similar_books = list(enumerate(cosine_sim[books_index]))
+	try:
+		books_index = get_index_from_title(books_user_likes)
+		similar_books = list(enumerate(cosine_sim[books_index]))
+	except ValueError as e:
+		# Return empty list if book not found
+		return []
 
 #Get a list of similar books in descending order of similarity score
 	sorted_similar_books = sorted(similar_books,key=lambda x:x[1],reverse=True)

@@ -72,9 +72,12 @@ def recommender():
 	form=BookForm()
 	df=pd.read_csv("Bookz.csv")
 	if form.validate_on_submit():
-		flash(f'Here are the following recommendations for you', 'success')
 		book=form.bookname.data
 		final_list = recom(book)
+		if final_list:
+			flash(f'Here are the following recommendations for you', 'success')
+		else:
+			flash(f'Book "{book}" not found in our database. Please try a different book title.', 'warning')
 		return render_template('recommender.html',title='Recommender',form=form,final=final_list)
 	return render_template('recommender.html',title='Recommender',form=form)
 
